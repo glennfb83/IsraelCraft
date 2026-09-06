@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IsraelCraft — Official Community Hub</title>
+<meta name="description" content="The official community hub for IsraelCraft, a small vanilla survival Minecraft civilization with a disproportionately large amount of history." />
+<style>
+  :root{
+    --ink:#161616;
+    --paper:#f2ecd9;
+    --paper2:#e7dec3;
+    --blue:#1d4e89;
+    --blue2:#356fba;
+    --red:#b53c35;
+    --green:#456b43;
+    --gold:#c49a47;
+    --muted:#6f6859;
+    --line:#bdb39a;
+    --card:#f7f2e5;
+    --shadow:0 10px 30px rgba(0,0,0,.12);
+    --pixel:"Courier New", ui-monospace, monospace;
+    --sans:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 10%, rgba(29,78,137,.07), transparent 30%),
+      radial-gradient(circle at 80% 15%, rgba(181,60,53,.05), transparent 25%),
+      var(--paper);
+    font-family:var(--sans);
+    line-height:1.5;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.17;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+    z-index:999;
+  }
+
+  a{color:inherit}
+  .wrap{width:min(1160px, calc(100% - 32px)); margin:auto}
+  .eyebrow{
+    font-family:var(--pixel);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-size:.78rem;
+    color:var(--blue);
+    font-weight:800;
+  }
+
+  .topbar{
+    background:#111;
+    color:#eee8d8;
+    font-family:var(--pixel);
+    font-size:.78rem;
+    border-bottom:3px solid var(--blue);
+  }
+  .topbar .wrap{
+    min-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .blink{
+    display:inline-block;
+    width:8px;height:8px;border-radius:50%;
+    background:#72c46f;
+    box-shadow:0 0 0 3px rgba(114,196,111,.15);
+    margin-right:7px;
+  }
+
+  header{
+    border-bottom:1px solid var(--line);
+    background:rgba(242,236,217,.94);
+    backdrop-filter:blur(7px);
+    position:sticky; top:0; z-index:20;
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:72px;
+    gap:20px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    text-decoration:none;
+  }
+  .brand-mark{
+    width:42px;height:42px;
+    border:2px solid var(--ink);
+    display:grid;place-items:center;
+    font-weight:900;
+    background:
+      linear-gradient(#fff 0 34%, #2d65a8 34% 66%, #fff 66%);
+    box-shadow:3px 3px 0 var(--ink);
+    transform:rotate(-2deg);
+  }
+  .brand strong{font-family:var(--pixel); font-size:1.05rem}
+  .brand small{display:block;color:var(--muted);font-size:.7rem}
+  .navlinks{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .navlinks a{
+    text-decoration:none;
+    font-family:var(--pixel);
+    font-size:.78rem;
+    font-weight:700;
+  }
+  .navlinks a:hover{color:var(--blue)}
+  .btn{
+    border:2px solid var(--ink);
+    padding:10px 14px;
+    background:var(--card);
+    box-shadow:3px 3px 0 var(--ink);
+    text-decoration:none;
+    font-family:var(--pixel);
+    font-weight:800;
+    display:inline-block;
+    cursor:pointer;
+    transition:.12s ease;
+  }
+  .btn:hover{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.primary{background:var(--blue);color:white}
+  .btn.red{background:var(--red);color:white}
+
+  .hero{
+    padding:70px 0 44px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:34px;
+    align-items:center;
+  }
+  h1{
+    margin:.2rem 0 1rem;
+    font-size:clamp(3.2rem,8vw,7.2rem);
+    line-height:.84;
+    letter-spacing:-.07em;
+  }
+  h1 span{
+    display:block;
+    color:var(--blue);
+    font-family:var(--pixel);
+    font-size:.32em;
+    line-height:1.3;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .hero-copy{
+    font-size:1.13rem;
+    max-width:720px;
+    color:#3f3a31;
+  }
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .server-strip{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;
+    font-family:var(--pixel);font-size:.76rem;
+  }
+  .chip{border:1px solid var(--line);background:#ebe4d0;padding:7px 9px}
+
+  .poster{
+    background:#ded5bd;
+    border:2px solid var(--ink);
+    box-shadow:8px 8px 0 #252525;
+    padding:16px;
+    transform:rotate(1.2deg);
+  }
+  .image-slot{
+    min-height:280px;
+    border:2px dashed #827a67;
+    background:
+      linear-gradient(135deg,rgba(29,78,137,.07),rgba(255,255,255,.2)),
+      repeating-linear-gradient(45deg,#d9cfb5,#d9cfb5 12px,#d2c7ad 12px,#d2c7ad 24px);
+    display:grid;place-items:center;
+    text-align:center;padding:20px;
+    font-family:var(--pixel);
+    color:#69614f;
+  }
+  .image-slot small{display:block;margin-top:7px;font-size:.7rem}
+  .poster-note{
+    display:flex;justify-content:space-between;gap:12px;
+    margin-top:10px;font-family:var(--pixel);font-size:.72rem;
+  }
+
+  .ticker{
+    border-block:2px solid var(--ink);
+    background:#161616;color:#f5f0df;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  .ticker-track{
+    display:inline-block;
+    padding:10px 0;
+    animation:scroll 34s linear infinite;
+    font-family:var(--pixel);
+    font-weight:800;
+    font-size:.8rem;
+  }
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  section{padding:68px 0;border-bottom:1px solid var(--line)}
+  .section-head{
+    display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:28px;
+  }
+  .section-head h2{
+    margin:.2rem 0 0;
+    font-size:clamp(2rem,5vw,4.6rem);
+    line-height:.95;letter-spacing:-.045em;
+  }
+  .section-head p{max-width:520px;color:var(--muted)}
+
+  .grid{display:grid;gap:18px}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  .grid.four{grid-template-columns:repeat(4,1fr)}
+  .grid.two{grid-template-columns:repeat(2,1fr)}
+  .card{
+    border:1px solid var(--line);
+    background:var(--card);
+    padding:20px;
+    box-shadow:0 4px 14px rgba(0,0,0,.05);
+  }
+  .card h3{margin:6px 0 9px;font-size:1.32rem}
+  .card p{margin:0;color:#504a3e}
+  .stamp{
+    display:inline-block;
+    font-family:var(--pixel);
+    font-size:.68rem;
+    border:2px solid currentColor;
+    padding:4px 7px;
+    transform:rotate(-2deg);
+    color:var(--red);
+    text-transform:uppercase;
+    font-weight:900;
+  }
+
+  .stat{
+    font-family:var(--pixel);
+    border-left:4px solid var(--blue);
+  }
+  .stat b{font-size:2rem;display:block;color:var(--blue)}
+  .stat small{color:var(--muted)}
+
+  .timeline{position:relative;margin-left:9px}
+  .timeline::before{
+    content:"";position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--line);
+  }
+  .event{position:relative;padding-left:34px;margin:0 0 28px}
+  .event::before{
+    content:"";position:absolute;left:0;top:6px;width:14px;height:14px;background:var(--blue);border:2px solid var(--ink);
+  }
+  .event time{font-family:var(--pixel);font-size:.72rem;color:var(--muted)}
+  .event h3{margin:2px 0 6px}
+
+  .player{
+    position:relative;
+    min-height:230px;
+  }
+  .player .role{
+    font-family:var(--pixel);font-size:.7rem;color:var(--blue);font-weight:800;text-transform:uppercase;
+  }
+  .player .quote{
+    border-top:1px dashed var(--line);
+    margin-top:16px;padding-top:12px;
+    font-family:var(--pixel);font-size:.75rem;color:#5b5548;
+  }
+  .danger-tape{
+    background:repeating-linear-gradient(135deg,#121212,#121212 12px,#c8a73d 12px,#c8a73d 24px);
+    height:12px;margin:-20px -20px 18px;
+  }
+
+  .gov-grid{
+    display:grid;grid-template-columns:.8fr 1.2fr;gap:22px;
+  }
+  .seal{
+    border:3px double var(--blue);
+    background:#ece5d3;padding:28px;
+    text-align:center;
+  }
+  .seal .big{font-size:4rem}
+  .seal h3{font-family:var(--pixel);margin:8px 0}
+  .notice{
+    border-left:5px solid var(--red);
+    padding:16px 18px;
+    background:#efe3cf;
+    margin-top:14px;
+  }
+
+  .scoreboard{
+    width:100%;border-collapse:collapse;background:var(--card);
+    font-family:var(--pixel);font-size:.82rem;
+  }
+  .scoreboard th,.scoreboard td{
+    border:1px solid var(--line);padding:12px;text-align:left;
+  }
+  .scoreboard th{background:#1b1b1b;color:#f4efdf}
+  .medal{font-weight:900}
+  .first{color:#8b6b19}.second{color:#686868}.third{color:#8a5832}
+
+  .games-list{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;
+  }
+  .game{
+    border:1px solid var(--line);padding:14px;background:#eee6d3;
+    font-family:var(--pixel);font-size:.76rem;
+  }
+
+  .news-grid{
+    display:grid;grid-template-columns:1.15fr .85fr;gap:22px;
+  }
+  .paper{
+    background:#f8f3e5;border:1px solid #bfb49a;padding:26px;
+    box-shadow:var(--shadow);
+  }
+  .paper-masthead{
+    text-align:center;border-bottom:4px double var(--ink);padding-bottom:12px;margin-bottom:18px;
+  }
+  .paper-masthead h3{
+    font-family:Georgia,serif;font-size:2.5rem;margin:0;letter-spacing:-.04em;
+  }
+  .paper-masthead small{font-family:var(--pixel)}
+  .headline{
+    font-family:Georgia,serif;
+    font-size:clamp(2rem,5vw,4rem);
+    line-height:.93;margin:0 0 12px;
+  }
+  .byline{font-family:var(--pixel);font-size:.68rem;color:var(--muted)}
+  .columns{
+    column-count:2;column-gap:28px;
+    margin-top:18px;font-family:Georgia,serif;
+  }
+
+  .build-card .image-slot{min-height:170px;margin-bottom:14px}
+  .build-card code{
+    display:block;margin-top:8px;font-size:.68rem;color:var(--muted);
+    white-space:normal;
+  }
+
+  .rules{
+    counter-reset:rule;
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  }
+  .rule{
+    counter-increment:rule;
+    padding:16px;border:1px solid var(--line);background:#eee6d2;
+  }
+  .rule::before{
+    content:"RULE " counter(rule);
+    display:block;font-family:var(--pixel);font-size:.65rem;color:var(--blue);font-weight:900;margin-bottom:5px;
+  }
+
+  .join-box{
+    border:2px solid var(--ink);background:#161616;color:#f4efdf;padding:28px;
+    box-shadow:8px 8px 0 var(--blue);
+  }
+  .ip{
+    font-family:var(--pixel);font-size:clamp(1.1rem,3vw,2rem);
+    overflow-wrap:anywhere;
+    background:#262626;border:1px solid #444;padding:14px;margin:14px 0;
+  }
+
+  footer{padding:40px 0 70px;font-family:var(--pixel);font-size:.75rem;color:#5c5548}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .tiny{font-size:.68rem;color:var(--muted)}
+
+  .flip{
+    display:inline-block;
+    transition:transform .2s ease;
+  }
+  .flip:hover{transform:rotate(180deg)}
+  .classified{
+    background:#151515;color:#eee;padding:3px 6px;font-family:var(--pixel);
+  }
+
+  @media (max-width:900px){
+    .hero-grid,.news-grid,.gov-grid{grid-template-columns:1fr}
+    .grid.four{grid-template-columns:repeat(2,1fr)}
+    .grid.three{grid-template-columns:1fr}
+    .games-list{grid-template-columns:repeat(2,1fr)}
+    .navlinks{display:none}
+  }
+  @media (max-width:620px){
+    .grid.two,.grid.four,.rules{grid-template-columns:1fr}
+    .games-list{grid-template-columns:1fr}
+    .columns{column-count:1}
+    .hero{padding-top:42px}
+    h1{font-size:3.8rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div><span class="blink"></span> ISRAELCRAFT NETWORK // WHITELIST ACTIVE</div>
+    <div>JAVA + BEDROCK • VANILLA SURVIVAL • VERSION 26.2</div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="#home" class="brand">
+        <div class="brand-mark">IC</div>
+        <div><strong>ISRAELCRAFT</strong><small>community civilization portal</small></div>
+      </a>
+      <div class="navlinks">
+        <a href="#history">History</a>
+        <a href="#people">Citizens</a>
+        <a href="#government">Government</a>
+        <a href="#games">Games</a>
+        <a href="#news">Times</a>
+        <a href="#builds">World</a>
+        <a href="#join">Join</a>
+      </div>
+      <a class="btn primary" href="https://discord.gg/fUkshKDKEz" target="_blank" rel="noopener">COMMUNITY DISCORD ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Four players. Several governments' worth of lore.</div>
+      <h1><span>The unofficially official home of</span>IsraelCraft.</h1>
+      <p class="hero-copy">
+        A whitelist vanilla-survival Minecraft server founded by Big P, Glenn and Max,
+        later joined by Bedrock representative Leif. IsraelCraft has bases, roads,
+        automated farms, a nether highway, sporting institutions, political controversy,
+        an alarming amount of crime history, and exactly four people keeping all of it alive.
+      </p>
+      <div class="hero-actions">
+        <a href="#join" class="btn primary">ENTER THE CIVILIZATION</a>
+        <a href="#news" class="btn">READ THE TIMES</a>
+      </div>
+      <div class="server-strip">
+        <span class="chip">IP: IsraelCraftMPG.exaroton.me</span>
+        <span class="chip">Whitelist</span>
+        <span class="chip">QoL mods allowed</span>
+        <span class="chip">X-ray: absolutely not bro</span>
+      </div>
+    </div>
+
+    <div class="poster">
+      <div class="image-slot">
+        <div>
+          <strong>📸 HERO SCREENSHOT SLOT</strong>
+          <small>Replace this box with your best spawn / group / skyline screenshot.</small>
+          <small>Search for: HERO IMAGE SLOT in the HTML.</small>
+        </div>
+      </div>
+      <div class="poster-note">
+        <span>ARCHIVE IMAGE 001</span>
+        <span>Things may go flippy.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    ✦ BREAKING: PIerson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbsp; ✦ NETHER HIGHWAY remains extremely useful &nbsp;&nbsp; ✦ MAX accused of stealing from GlennFB — allegedly &nbsp;&nbsp; ✦ GROUP LEADER PIERSON562 continues group-leading activities &nbsp;&nbsp;
+    ✦ BREAKING: PIerson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbsp; ✦ NETHER HIGHWAY remains extremely useful &nbsp;&nbsp; ✦ MAX accused of stealing from GlennFB — allegedly &nbsp;&nbsp; ✦ GROUP LEADER PIERSON562 continues group-leading activities &nbsp;&nbsp;
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Server at a glance</div><h2>Small server.<br>Unreasonable lore.</h2></div>
+      <p>IsraelCraft is intentionally presented here like a functioning nation because, at this point, that is basically what happened.</p>
+    </div>
+    <div class="grid four">
+      <div class="card stat"><b>4</b><small>current citizens</small></div>
+      <div class="card stat"><b>3</b><small>founders: Big P, Glenn, Max</small></div>
+      <div class="card stat"><b>1</b><small>Bedrock boy: Leif</small></div>
+      <div class="card stat"><b>∞</b><small>historical incidents, roughly</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="history">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">National archive</div><h2>A history nobody<br>kept under control.</h2></div>
+      <p>The full chronology is still being reconstructed. What is known: IsraelCraftMPG came first, the IsraelCraft identity grew from it, and the world accumulated wars, crime, politics, builds and traditions along the way.</p>
+    </div>
+
+    <div class="grid two">
+      <div class="timeline">
+        <div class="event">
+          <time>FOUNDING ERA</time>
+          <h3>IsraelCraftMPG is created</h3>
+          <p>Big P created the server. Glenn and Max are also recognized as founders. The exact date and early-era record can be added when the archive is complete.</p>
+        </div>
+        <div class="event">
+          <time>LATER ERA</time>
+          <h3>The IsraelCraft identity takes over</h3>
+          <p>Across some platforms, IsraelCraftMPG was rebranded more simply as <strong>IsraelCraft</strong>. The civilization kept the same deeply normal tradition of not being normal.</p>
+        </div>
+        <div class="event">
+          <time>7/25/2026</time>
+          <h3>The Weed Wacker Incident</h3>
+          <p>An equipment malfunction in Larpville caused injury and property damage. The affected area was secured, assistance was provided, and the incident entered local history as a cautionary tale about landscaping equipment.</p>
+        </div>
+        <div class="event">
+          <time>8/18/2026</time>
+          <h3>First Official Larpville Games</h3>
+          <p>The recurring player-created sporting institution becomes official. Max places first, Glenn second, Pierson third, and Leif fourth.</p>
+        </div>
+        <div class="event">
+          <time>CURRENT ERA</time>
+          <h3>Government season</h3>
+          <p>Pierson serves as Treasurer while facing controversy. Additional elections for other positions are upcoming.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="stamp">Archive incomplete</div>
+        <h3>Crime, war & the missing records</h3>
+        <p>
+          IsraelCraft has a deeper history of crime, wars, political drama and major incidents than is currently documented on this page.
+          Instead of making up fake details, those eras are being left intentionally vague until the actual records are entered.
+        </p>
+        <div class="notice">
+          <strong>ARCHIVIST NOTE:</strong><br>
+          Add wars, theft cases, trials, treaties, territory disputes, destroyed builds and old screenshots here as the canon gets reconstructed.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="people">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Population registry</div><h2>The four citizens.</h2></div>
+      <p>Four people is technically enough for a society. IsraelCraft has chosen to use that fact irresponsibly.</p>
+    </div>
+
+    <div class="grid four">
+      <article class="card player">
+        <div class="role">Founder • Treasurer • Group Leader</div>
+        <h3>Big P / Pierson562</h3>
+        <p>Creator of the server and current Treasurer. Frequently referred to with the extremely official title of <strong>Group Leader</strong>. Has faced political controversy and is central to the current government era.</p>
+        <div class="quote">STATUS: probably organizing something.</div>
+      </article>
+
+      <article class="card player">
+        <div class="role">Founder • Citizen • Historian-ish</div>
+        <h3>Glenn</h3>
+        <p>Founder, resident chronicler and notable participant in IsraelCraft history. Finished second in the First Official Larpville Games and created Mini Golf for the event.</p>
+        <div class="quote">KNOWN ASSOCIATED NAME: GlennFB</div>
+      </article>
+
+      <article class="card player">
+        <div class="danger-tape"></div>
+        <div class="role">Founder • First Larpville Champion • Allegedly Evil</div>
+        <h3>Max</h3>
+        <p>Founder and winner of the First Official Larpville Games. Community lore describes Max as “pure evil.” He has also been accused of stealing from GlennFB. <strong>Accusedly. Allegedly. Minecraftly.</strong></p>
+        <div class="quote">LEGAL DEPARTMENT MADE US WRITE “ALLEGEDLY.”</div>
+      </article>
+
+      <article class="card player">
+        <div class="role">Citizen • Bedrock Division • Frequent Casualty</div>
+        <h3>Leif</h3>
+        <p>Joined after the founders and represents the Bedrock side of the server. Also possesses the unique historical ability to die, lose all his stuff, recover, and somehow do it again.</p>
+        <div class="quote">CURRENT INVENTORY STATUS: please check on him.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="government">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Government portal</div><h2>Democracy, probably.</h2></div>
+      <p>IsraelCraft's political system is developing in real time. Known officeholders and confirmed elections are listed; everything else stays intentionally un-invented.</p>
+    </div>
+
+    <div class="gov-grid">
+      <div class="seal">
+        <div class="big">✡</div>
+        <h3>ISRAELCRAFT CIVIC OFFICE</h3>
+        <p class="tiny">AUTHORITY MAY VARY DEPENDING ON WHO IS ONLINE</p>
+      </div>
+      <div>
+        <div class="card">
+          <div class="eyebrow">Current officeholder</div>
+          <h3>Treasurer — Pierson</h3>
+          <p>Pierson currently serves as Treasurer. His tenure has faced controversy, though the complete details of that controversy remain to be added to the public record.</p>
+        </div>
+        <div class="notice">
+          <span class="stamp">Election watch</span>
+          <h3>Upcoming elections</h3>
+          <p>Elections for additional positions are expected. Candidates, offices, voting rules and dates should be inserted here when officially announced.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="games">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Department of sport</div><h2>The Larpville Games.</h2></div>
+      <p>A recurring competition where each player creates a game, everyone competes, and the Dragon Egg becomes a championship trophy until the next event.</p>
+    </div>
+
+    <div class="grid two">
+      <div>
+        <div class="card">
+          <span class="stamp">First official games</span>
+          <h3>Final standings — 8/18/2026</h3>
+          <table class="scoreboard">
+            <thead><tr><th>Place</th><th>Player</th><th>Prize</th></tr></thead>
+            <tbody>
+              <tr><td class="medal first">1st</td><td>Max</td><td>Dragon Egg until next Games + Netherite Ingot + Trident</td></tr>
+              <tr><td class="medal second">2nd</td><td>Glenn</td><td>64 Iron Blocks</td></tr>
+              <tr><td class="medal third">3rd</td><td>Pierson</td><td>64 Copper Blocks</td></tr>
+              <tr><td>4th</td><td>Leif</td><td>1 Dirt Block 💀</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Games on record</div>
+        <h3>Event catalogue</h3>
+        <p>The archive includes the early listed events plus the first official player-created lineup.</p>
+        <div class="games-list">
+          <div class="game">3-Lap Race</div>
+          <div class="game">Cactus Parkour</div>
+          <div class="game">Egg Toss</div>
+          <div class="game">Guess the Child</div>
+          <div class="game">1-on-1 Stick PvP</div>
+          <div class="game">Leif — Creaking Basketball</div>
+          <div class="game">Pierson — Relay Race</div>
+          <div class="game">Max — Bow PvP</div>
+          <div class="game">Glenn — Mini Golf</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="news">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Independent-ish press</div><h2>The IsraelCraft Times.</h2></div>
+      <p>Public affairs, scandals, sporting results and extremely important four-person national developments.</p>
+    </div>
+
+    <div class="news-grid">
+      <article class="paper">
+        <div class="paper-masthead">
+          <h3>THE ISRAELCRAFT TIMES</h3>
+          <small>TRUTH • BLOCKS • PROBABLY SOME BIAS</small>
+        </div>
+        <div class="byline">CURRENT AFFAIRS DESK • ISRAELCRAFT</div>
+        <h3 class="headline">Treasurer Pierson Faces Controversy as Election Season Approaches</h3>
+        <div class="columns">
+          IsraelCraft has entered a new political period as Treasurer Pierson remains in office while facing controversy and the community prepares for elections to additional positions.
+          The exact allegations and future offices remain part of an evolving public record, but political activity has already become one of the server's defining current stories.
+          <br><br>
+          Pierson, also known as Big P and Pierson562, is one of IsraelCraft's three founders and the original creator of the server. His influence stretches well beyond the treasury, with “Group Leader” remaining one of the community's most enduring titles.
+          <br><br>
+          Officials have not confirmed a complete election schedule. The IsraelCraft Times will update this page once candidates, offices, dates and results are actually known instead of making stuff up for the website.
+        </div>
+      </article>
+
+      <div class="grid">
+        <article class="card">
+          <div class="eyebrow">Sport</div>
+          <h3>Max Holds the Dragon Egg</h3>
+          <p>After winning the First Official Larpville Games on August 18, 2026, Max holds the Dragon Egg championship prize until the next Games.</p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Public safety</div>
+          <h3>Weed Wacker Incident Remains Part of Larpville Memory</h3>
+          <p>The July 25 incident, attributed to an equipment malfunction, caused injury and property damage and later became a local warning about equipment safety.</p>
+        </article>
+        <article class="card">
+          <div class="eyebrow">Ongoing investigation</div>
+          <h3>Max Accused of Theft From GlennFB</h3>
+          <p>Community allegations persist. This website has no court documents, no verified judgment, and absolutely no desire to be sued by a Minecraft player.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="builds">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Infrastructure bureau</div><h2>Actual civilization stuff.</h2></div>
+      <p>The world contains personal bases, shared infrastructure and automated systems. Image cards are intentionally easy to swap with your own screenshots.</p>
+    </div>
+
+    <div class="grid three">
+      <article class="card build-card">
+        <div class="image-slot">🏠 BASE SCREENSHOT</div>
+        <h3>Player Bases</h3>
+        <p>The homes, compounds and personal builds of IsraelCraft's residents.</p>
+        <code>Replace this .image-slot with: &lt;img src="images/bases.jpg" ...&gt;</code>
+      </article>
+
+      <article class="card build-card">
+        <div class="image-slot">🔥 NETHER HIGHWAY SCREENSHOT</div>
+        <h3>Nether Highway</h3>
+        <p>One of the server's major transport systems, linking distant areas through the Nether.</p>
+        <code>Suggested file: images/nether-highway.jpg</code>
+      </article>
+
+      <article class="card build-card">
+        <div class="image-slot">🌾 COMMUNITY FARM SCREENSHOT</div>
+        <h3>Community Auto Farms</h3>
+        <p>Shared automated farms built for community use and resource production.</p>
+        <code>Suggested file: images/community-farms.jpg</code>
+      </article>
+
+      <article class="card build-card">
+        <div class="image-slot">🏙️ LARPVILLE SCREENSHOT</div>
+        <h3>Larpville</h3>
+        <p>Home of the Larpville Games, civic incidents and an increasingly serious sporting tradition.</p>
+        <code>Suggested file: images/larpville.jpg</code>
+      </article>
+
+      <article class="card build-card">
+        <div class="image-slot">⛏️ COOL BUILD #1</div>
+        <h3>Featured Build</h3>
+        <p>Add any landmark, megabase, farm, monument or cursed structure here.</p>
+        <code>Suggested file: images/featured-1.jpg</code>
+      </article>
+
+      <article class="card build-card">
+        <div class="image-slot">🧱 COOL BUILD #2</div>
+        <h3>Archive Slot</h3>
+        <p>Reserved for whatever becomes historically important next.</p>
+        <code>Suggested file: images/featured-2.jpg</code>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Cultural affairs</div><h2>Things outsiders<br>will not understand.</h2></div>
+      <p>Every civilization needs folklore. Ours is just significantly dumber.</p>
+    </div>
+    <div class="grid four">
+      <div class="card"><h3>Things go <span class="flip">flippy.</span></h3><p>No further context has been authorized by the Ministry of Context.</p></div>
+      <div class="card"><h3>Group Leader Pierson562</h3><p>A title with unknown constitutional basis and extremely high cultural legitimacy.</p></div>
+      <div class="card"><h3>Max is pure evil</h3><p>Community characterization. The website legal team remains nervous.</p></div>
+      <div class="card"><h3>Leif died again</h3><p>This section may become outdated approximately six minutes after publication.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="rules">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Law of the land</div><h2>Don't ruin the server.</h2></div>
+      <p>IsraelCraft is vanilla survival with room for quality-of-life improvements, not a race to see who can install the most unfair client.</p>
+    </div>
+    <div class="rules">
+      <div class="rule"><strong>No griefing.</strong><br>Whitelist exists specifically to keep random griefers out.</div>
+      <div class="rule"><strong>No X-ray.</strong><br>Resource-finding cheats and similarly extreme advantages are not allowed.</div>
+      <div class="rule"><strong>QoL mods are okay.</strong><br>Convenience is fine so long as it does not become an extreme gameplay advantage.</div>
+      <div class="rule"><strong>Vanilla survival spirit.</strong><br>The point is to play the world, build things, make history and occasionally accuse Max of crimes.</div>
+    </div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="wrap">
+    <div class="join-box">
+      <div class="eyebrow" style="color:#87aee0">Connection terminal</div>
+      <h2 style="font-size:clamp(2.2rem,6vw,5rem);margin:.2rem 0 10px;line-height:.95">Join IsraelCraft.</h2>
+      <p style="max-width:760px;color:#d1cab9">
+        IsraelCraft is currently whitelist-only. If you're supposed to be here, get whitelisted first and connect using the server address below. Java and Bedrock players are both supported.
+      </p>
+      <div class="ip" id="ip">IsraelCraftMPG.exaroton.me</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn primary" onclick="copyIP()">COPY SERVER IP</button>
+        <a class="btn" href="https://discord.gg/fUkshKDKEz" target="_blank" rel="noopener" style="background:#f1ecdf;color:#111">OPEN DISCORD</a>
+      </div>
+      <p id="copyMsg" class="tiny" style="margin-top:12px;color:#8fcd8b"></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <strong>ISRAELCRAFT</strong><br>
+      IsraelCraftMPG.exaroton.me
+    </div>
+    <div>
+      Founded by Big P, Glenn & Max.<br>
+      Later joined by Leif, Bedrock boy.
+    </div>
+    <div>
+      <span class="classified">OFFICIAL-ISH</span><br>
+      <span class="tiny">Not affiliated with Mojang or Microsoft.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function copyIP(){
+    const ip = "IsraelCraftMPG.exaroton.me";
+    navigator.clipboard.writeText(ip).then(() => {
+      document.getElementById("copyMsg").textContent = "✓ COPIED. Welcome to civilization.";
+    }).catch(() => {
+      document.getElementById("copyMsg").textContent = "Copy this manually: " + ip;
+    });
+  }
+
+  // Tiny personality detail: random footer-style status message.
+  const statuses = [
+    "Leif inventory integrity: questionable",
+    "Treasury audit status: awkward",
+    "Nether highway traffic: probably fine",
+    "Max criminal allegations: allegedly alleged",
+    "Group leader systems: operational",
+    "Things: potentially flippy"
+  ];
+  console.log("[IsraelCraft Civic Terminal] " + statuses[Math.floor(Math.random()*statuses.length)]);
+</script>
+
+<!--
+============================================================
+ISRAELCRAFT IMAGE REPLACEMENT GUIDE
+============================================================
+
+To replace an image slot, change this:
+
+<div class="image-slot">🏠 BASE SCREENSHOT</div>
+
+to this:
+
+<img src="images/bases.jpg"
+     alt="IsraelCraft player bases"
+     style="width:100%;height:170px;object-fit:cover;border:2px solid #161616;margin-bottom:14px;">
+
+Recommended folder layout:
+
+index.html
+images/
+  hero.jpg
+  bases.jpg
+  nether-highway.jpg
+  community-farms.jpg
+  larpville.jpg
+  featured-1.jpg
+  featured-2.jpg
+
+For the large hero screenshot, use something like:
+
+<img src="images/hero.jpg"
+     alt="IsraelCraft"
+     style="width:100%;min-height:280px;max-height:430px;object-fit:cover;border:2px solid #161616;">
+
+Everything intentionally unknown was kept vague instead of invented.
+============================================================
+-->
+</body>
+</html>
