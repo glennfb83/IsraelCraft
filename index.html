@@ -42,7 +42,7 @@
     inset:0;
     pointer-events:none;
     opacity:.17;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequ[...]");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequ");
     mix-blend-mode:multiply;
     z-index:999;
   }
@@ -180,14 +180,28 @@
   }
   .image-slot{
     min-height:280px;
+    height:280px;
+    overflow:hidden;
     border:2px dashed #827a67;
     background:
       linear-gradient(135deg,rgba(29,78,137,.07),rgba(255,255,255,.2)),
       repeating-linear-gradient(45deg,#d9cfb5,#d9cfb5 12px,#d2c7ad 12px,#d2c7ad 24px);
     display:grid;place-items:center;
-    text-align:center;padding:20px;
+    text-align:center;
     font-family:var(--pixel);
     color:#69614f;
+  }
+  .image-slot img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    border:0;
+  }
+  .poster .image-slot{
+    min-height:360px;
+    height:360px;
   }
   .image-slot small{display:block;margin-top:7px;font-size:.7rem}
   .poster-note{
@@ -342,7 +356,7 @@
     margin-top:18px;font-family:Georgia,serif;
   }
 
-  .build-card .image-slot{min-height:170px;margin-bottom:14px}
+  .build-card .image-slot{height:190px;min-height:190px;margin-bottom:14px}
   .build-card code{
     display:block;margin-top:8px;font-size:.68rem;color:var(--muted);
     white-space:normal;
@@ -392,6 +406,8 @@
     .navlinks{display:none}
   }
   @media (max-width:620px){
+    .poster .image-slot{height:260px;min-height:260px}
+    .build-card .image-slot{height:210px;min-height:210px}
     .grid.two,.grid.four,.rules{grid-template-columns:1fr}
     .games-list{grid-template-columns:1fr}
     .columns{column-count:1}
@@ -455,7 +471,7 @@
     </div>
 
     <div class="poster">
-      <div class="image-slot"<img src="images/map.jpg" ...>>
+      <div class="image-slot"><img src="images/map.jpg" alt="IsraelCraft server map"></div>
       </div>
       <div class="poster-note">
         <span>SERVER MAP</span>
@@ -467,8 +483,8 @@
 
 <div class="ticker">
   <div class="ticker-track">
-    ✦ BREAKING: PIerson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbs[...]
-    ✦ BREAKING: PIerson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbs[...]
+    ✦ BREAKING: PIerson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbs
+    ✦ BREAKING: PIerson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbs
   </div>
 </div>
 
@@ -666,42 +682,42 @@
 
     <div class="grid three">
       <article class="card build-card">
-        <div class="image-slot"><img src="images/bases.jpg" ...></div>
+        <div class="image-slot"><img src="images/bases.jpg" alt="IsraelCraft player bases"></div>
         <h3>Player Bases</h3>
         <p>The homes, compounds and personal builds of IsraelCraft's residents.</p>
 
       </article>
 
       <article class="card build-card">
-        <div class="image-slot"><img src="images/nether-highway.jpg" ...></div>
+        <div class="image-slot"><img src="images/nether-highway.jpg" alt="IsraelCraft Nether Highway"></div>
         <h3>Nether Highway</h3>
         <p>One of the server's major transport systems, linking distant areas through the Nether.</p>
 
       </article>
 
       <article class="card build-card">
-        <div class="image-slot"><img src="images/community-farms.jpg" ...></div>
+        <div class="image-slot"><img src="images/community-farms.jpg" alt="IsraelCraft community auto farms"></div>
         <h3>Community Auto Farms</h3>
         <p>Shared automated farms built for community use and resource production.</p>
 
       </article>
 
       <article class="card build-card">
-        <div class="image-slot"><img src="images/larpville.jpg.png" ...></div>
+        <div class="image-slot"><img src="images/larpville.jpg.png" alt="Larpville"></div>
         <h3>Larpville</h3>
         <p>Home of the Original Larpville Games, Glenn, civic incidents and an increasingly serious sporting tradition.</p>
 
       </article>
 
       <article class="card build-card">
-        <div class="image-slot"><img src="images/featured-1.jpg" ...></div>
+        <div class="image-slot"><img src="images/featured-1.jpg" alt="IsraelCraft featured build"></div>
         <h3>Featured Build</h3>
         <p>Add any landmark, megabase, farm, monument or cursed structure here.</p>
 
       </article>
 
       <article class="card build-card">
-        <div class="image-slot"><img src="images/featured-2.jpg" ...></div>
+        <div class="image-slot"><img src="images/featured-2.jpg" alt="IsraelCraft featured screenshot"></div>
         <h3>Most Important Screenshot</h3>
         <p>The screenshot before we beat the enderdragon...</p>
 
@@ -811,41 +827,6 @@
   console.log("[IsraelCraft Civic Terminal] " + statuses[Math.floor(Math.random()*statuses.length)]);
 </script>
 
-<!--
-============================================================
-ISRAELCRAFT IMAGE REPLACEMENT GUIDE
-============================================================
 
-To replace an image slot, change this:
-
-<div class="image-slot">🏠 BASE SCREENSHOT</div>
-
-to this:
-
-<img src="images/bases.jpg"
-     alt="IsraelCraft player bases"
-     style="width:100%;height:170px;object-fit:cover;border:2px solid #161616;margin-bottom:14px;">
-
-Recommended folder layout:
-
-index.html
-images/
-  hero.jpg
-  bases.jpg
-  nether-highway.jpg
-  community-farms.jpg
-  larpville.jpg
-  featured-1.jpg
-  featured-2.jpg
-
-For the large hero screenshot, use something like:
-
-<img src="images/hero.jpg"
-     alt="IsraelCraft"
-     style="width:100%;min-height:280px;max-height:430px;object-fit:cover;border:2px solid #161616;">
-
-Everything intentionally unknown was kept vague instead of invented.
-============================================================
--->
 </body>
 </html>
