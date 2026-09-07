@@ -376,6 +376,20 @@
     display:block;font-family:var(--pixel);font-size:.65rem;color:var(--blue);font-weight:900;margin-bottom:5px;
   }
 
+  .stats-table{
+    width:100%;border-collapse:collapse;background:var(--card);
+    font-family:var(--pixel);font-size:.85rem;
+  }
+  .stats-table th,.stats-table td{
+    border:1px solid var(--line);padding:14px;text-align:center;
+  }
+  .stats-table th{background:#1b1b1b;color:#f4efdf;font-weight:900}
+  .stats-table td:first-child,.stats-table th:first-child{text-align:left}
+  .stats-table .rank-1{color:#8b6b19;font-weight:900}
+  .stats-table .rank-2{color:#686868;font-weight:800}
+  .stats-table .rank-3{color:#8a5832;font-weight:800}
+  .stats-table .rank-4{color:#5b5548;font-weight:800}
+
   .join-box{
     border:2px solid var(--ink);background:#161616;color:#f4efdf;padding:28px;
     box-shadow:8px 8px 0 var(--blue);
@@ -414,6 +428,8 @@
     .columns{column-count:1}
     .hero{padding-top:42px}
     h1{font-size:3.8rem}
+    .stats-table{font-size:.72rem}
+    .stats-table th,.stats-table td{padding:10px}
   }
 </style>
 </head>
@@ -482,8 +498,8 @@
 
 <div class="ticker">
   <div class="ticker-track">
-    ✦ BREAKING: Pierson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbsp;    ✦ BREAKING: Big P transfers to Beitar Jerusalem &nbsp;&nbsp; ✦ IN POLITICS: Glenn challenges other candidates for government roles &nbsp;&nbsp; ✦ FLIPPY FRANK takes dih amid straight accusations &nbsp;&nbsp;
-    ✦ BREAKING: Pierson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbsp;    ✦ BREAKING: Big P transfers to Beitar Jerusalem &nbsp;&nbsp; ✦ IN POLITICS: Glenn challenges other candidates for government roles &nbsp;&nbsp; ✦ FLIPPY FRANK takes dih amid straight accusations &nbsp;&nbsp;
+    ✦ BREAKING: Pierson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbsp;   [...]
+    ✦ BREAKING: Pierson remains Treasurer amid controversy &nbsp;&nbsp; ✦ LARPVILLE GAMES: Max holds the Dragon Egg &nbsp;&nbsp; ✦ LEIF reportedly dies and loses everything again &nbsp;&nbsp;   [...]
   </div>
 </div>
 
@@ -506,7 +522,7 @@
   <div class="wrap">
     <div class="section-head">
       <div><div class="eyebrow">National archive</div><h2>A history nobody<br>kept under control.</h2></div>
-      <p>The (attempt at a) full chronology is here, if something is missing, please alert an official player in the Discord server. Summary: IsraelCraftMPG came first, the IsraelCraft identity grew from it, and the world accumulated wars, crime, politics, builds, etc...
+      <p>The (attempt at a) full chronology is here, if something is missing, please alert an official player in the Discord server. Summary: IsraelCraftMPG came first, the IsraelCraft identity grew f[...]
     </div>
 
     <div class="grid two">
@@ -514,12 +530,12 @@
         <div class="event">
           <time>FOUNDING ERA</time>
           <h3>IsraelCraftMPG is created</h3>
-          <p>Big P created the server. Glenn and Max are also recognized as founders. The exact date is unknown, however it occured in mid to late April, 2026. This began the original world and a long, in-depth history.</p>
+          <p>Big P created the server. Glenn and Max are also recognized as founders. The exact date is unknown, however it occured in mid to late April, 2026. This began the original world and a long[...]
         </div>
         <div class="event">
           <time>THE NEW ERA</time>
           <h3>The IsraelCraft identity takes over</h3>
-          <p>Across some platforms, IsraelCraftMPG was rebranded more simply as <strong>IsraelCraft</strong>. A knew server was created, and the hosting platform moved from Aternos to Exaroton. The civilization kept the same deeply normal tradition of not being normal. Leif also joined the server at this time as Bedrock compatibility was introduced.</p>
+          <p>Across some platforms, IsraelCraftMPG was rebranded more simply as <strong>IsraelCraft</strong>. A knew server was created, and the hosting platform moved from Aternos to Exaroton. The ci[...]
         </div>
         <div class="event">
           <time>7/19/2026</time>
@@ -570,7 +586,7 @@
       <article class="card player">
         <div class="role">Founder • Treasurer • Group Leader</div>
         <h3>Big P / Pierson562</h3>
-        <p>Creator of the server and current Treasurer. Frequently referred to with the extremely official title of <strong>Group Leader</strong>. Has faced political controversy and is central to the history.
+        <p>Creator of the server and current Treasurer. Frequently referred to with the extremely official title of <strong>Group Leader</strong>. Has faced political controversy and is central to the[...]
         <div class="quote">STATUS: probably organizing something.</div>
       </article>
 
@@ -585,8 +601,8 @@
         <div class="danger-tape"></div>
         <div class="role">Founder • First Larpville Champion • Allegedly Evil</div>
         <h3>Max</h3>
-        <p>Founder and winner of the First Official Larpville Games. Community lore describes Max as “pure evil.” He has also been accused of stealing from GlennFB. <strong>Allegedly.
-        <div class="quote">LEGAL DEPARTMENT MADE US WRITE “ALLEGEDLY.”</div>
+        <p>Founder and winner of the First Official Larpville Games. Community lore describes Max as "pure evil." He has also been accused of stealing from GlennFB. <strong>Allegedly.
+        <div class="quote">LEGAL DEPARTMENT MADE US WRITE "ALLEGEDLY."</div>
       </article>
 
       <article class="card player">
@@ -596,6 +612,57 @@
         <div class="quote">CURRENT INVENTORY STATUS: please check on him.</div>
       </article>
     </div>
+  </div>
+</section>
+
+<section id="citizen-metrics">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="eyebrow">Civic analytics</div><h2>Citizen performance<br>metrics.</h2></div>
+      <p>Comparative statistics across all citizens, ranked by category. Rankings are unofficial and disputed by at least one party at any given time.</p>
+    </div>
+
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>1st</th>
+          <th>2nd</th>
+          <th>3rd</th>
+          <th>4th</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Morality Level</strong></td>
+          <td class="rank-1">Leif</td>
+          <td class="rank-2">Glenn</td>
+          <td class="rank-3">Max</td>
+          <td class="rank-4">Pierson</td>
+        </tr>
+        <tr>
+          <td><strong>Wealth Level</strong></td>
+          <td class="rank-1">Pierson</td>
+          <td class="rank-2">Glenn</td>
+          <td class="rank-3">Max</td>
+          <td class="rank-4">Leif</td>
+        </tr>
+        <tr>
+          <td><strong>Land Size</strong></td>
+          <td class="rank-1">Max</td>
+          <td class="rank-2">Glenn</td>
+          <td class="rank-3">Pierson</td>
+          <td class="rank-4">Leif</td>
+        </tr>
+        <tr>
+          <td><strong>Development Level</strong></td>
+          <td class="rank-1">Pierson</td>
+          <td class="rank-2">Glenn</td>
+          <td class="rank-3">Max</td>
+          <td class="rank-4">Leif</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
