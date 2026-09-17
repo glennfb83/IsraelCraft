@@ -46,9 +46,10 @@
         if (!response.ok) throw new Error('GitHub API returned ' + response.status);
         const commits = await response.json();
         list.innerHTML = commits.map(commit => {
-          const message = commit.commit.message.split('\n')[0];
+          const message = (commit.commit && commit.commit.message ? commit.commit.message.split('\n')[0] : 'Website update');
           const author = commit.author?.login || commit.commit.author?.name || 'Unknown editor';
-          const date = new Date(commit.commit.author?.date || commit.commit.committer?.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+          const rawDate = commit.commit.author?.date || commit.commit.committer?.date || new Date().toISOString();
+          const date = new Date(rawDate).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
           return `<article class="update-item"><strong>${escapeHtml(message)}</strong><span class="update-meta">${escapeHtml(author)} • ${date}</span></article>`;
         }).join('');
         status.textContent = `${commits.length} latest website updates`;
@@ -63,7 +64,7 @@
   }
 
   function escapeHtml(value) {
-    return String(value).replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character]));
+    return String(value).replace(/[&<>"']/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[character]));
   }
 
   function initMap() {
@@ -72,6 +73,11 @@
     const nightImage = document.getElementById('map-image-night');
     const modeToggle = document.getElementById('mode-toggle');
     if (!container || !image || !modeToggle) return;
+
+    // Touch support for mobile devices.
+    container.style.touchAction = 'none';
+    container.style.userSelect = 'none';
+    container.style.webkitUserSelect = 'none';
 
     const mapImages = [image, nightImage].filter(Boolean);
     let scale = 1, minScale = 1, x = 0, y = 0, dragStart = null, isNight = false;
@@ -85,11 +91,13 @@
       x = clamp(x, Math.min(0, width - imageWidth), Math.max(0, width - imageWidth));
       y = clamp(y, Math.min(0, height - imageHeight), Math.max(0, height - imageHeight));
     }
+
     function render() {
       limitPosition();
       const transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
       mapImages.forEach(mapImage => { mapImage.style.transform = transform; });
     }
+
     function resetView() {
       if (!image.naturalWidth || !image.naturalHeight) return;
       const width = container.clientWidth, height = container.clientHeight;
@@ -99,6 +107,7 @@
       y = (height - image.naturalHeight * scale) / 2;
       render();
     }
+
     function zoomAt(factor, centerX, centerY) {
       const nextScale = clamp(scale * factor, minScale, Math.max(minScale, MAX_SCALE));
       if (nextScale === scale) return;
@@ -108,6 +117,7 @@
       scale = nextScale;
       render();
     }
+
     function applyWheelZoom() {
       zoomFrame = null;
       if (!pendingDelta || !pendingPoint) return;
@@ -122,26 +132,65 @@
       pendingDelta = clamp(pendingDelta + (event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY), -240, 240);
       pendingPoint = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
       if (zoomFrame === null) zoomFrame = requestAnimationFrame(applyWheelZoom);
-    }, { passive:false });
-    container.addEventListener('pointerdown', event => {
+    }, { passive: false });
+
+    function startDrag(event) {
       if (event.target.closest('button')) return;
-      container.setPointerCapture(event.pointerId);
-      dragStart = { pointerX:event.clientX, pointerY:event.clientY, x, y };
+      const point = event.touches && event.touches[0] ? event.touches[0] : event;
+      container.setPointerCapture?.(event.pointerId || 1);
+      dragStart = { pointerX: point.clientX, pointerY: point.clientY, x, y };
       container.classList.add('is-dragging');
+    }
+
+    container.addEventListener('pointerdown', event => {
+      startDrag(event);
     });
+
+    container.addEventListener('touchstart', event => {
+      if (event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      dragStart = { pointerX: touch.clientX, pointerY: touch.clientY, x, y };
+      container.classList.add('is-dragging');
+      event.preventDefault();
+    }, { passive: false });
+
     container.addEventListener('pointermove', event => {
       if (!dragStart) return;
       x = dragStart.x + event.clientX - dragStart.pointerX;
       y = dragStart.y + event.clientY - dragStart.pointerY;
       render();
     });
-    const stopDragging = () => { dragStart = null; container.classList.remove('is-dragging'); };
+
+    container.addEventListener('touchmove', event => {
+      if (!dragStart || event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      x = dragStart.x + touch.clientX - dragStart.pointerX;
+      y = dragStart.y + touch.clientY - dragStart.pointerY;
+      render();
+      event.preventDefault();
+    }, { passive: false });
+
+    const stopDragging = () => {
+      dragStart = null;
+      container.classList.remove('is-dragging');
+    };
+
     container.addEventListener('pointerup', stopDragging);
     container.addEventListener('pointercancel', stopDragging);
+    container.addEventListener('touchend', stopDragging, { passive: false });
+    container.addEventListener('touchcancel', stopDragging, { passive: false });
+
     document.addEventListener('keydown', event => {
-      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); keys[event.key] = true; }
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault();
+        keys[event.key] = true;
+      }
     });
-    document.addEventListener('keyup', event => { if (keys[event.key]) keys[event.key] = false; });
+
+    document.addEventListener('keyup', event => {
+      if (keys[event.key]) keys[event.key] = false;
+    });
+
     setInterval(() => {
       const speed = 30;
       if (keys.ArrowUp) y += speed;
@@ -150,24 +199,45 @@
       if (keys.ArrowRight) x -= speed;
       if (Object.values(keys).some(Boolean)) render();
     }, 16);
+
     image.addEventListener('load', resetView);
     window.addEventListener('resize', resetView);
-    if (nightImage) nightImage.addEventListener('error', () => { nightImage.style.display = 'none'; modeToggle.disabled = true; modeToggle.title = 'Night map unavailable'; });
+
+    if (nightImage) {
+      nightImage.addEventListener('error', () => {
+        nightImage.style.display = 'none';
+        modeToggle.disabled = true;
+        modeToggle.title = 'Night map unavailable';
+      });
+    }
+
     document.getElementById('zoom-in')?.addEventListener('click', () => zoomAt(BUTTON_ZOOM_FACTOR, container.clientWidth / 2, container.clientHeight / 2));
     document.getElementById('zoom-out')?.addEventListener('click', () => zoomAt(1 / BUTTON_ZOOM_FACTOR, container.clientWidth / 2, container.clientHeight / 2));
     document.getElementById('reset-view')?.addEventListener('click', resetView);
+
     modeToggle.addEventListener('click', () => {
       isNight = !isNight;
       container.classList.toggle('is-night', isNight);
       modeToggle.setAttribute('aria-pressed', String(isNight));
       modeToggle.setAttribute('aria-label', isNight ? 'Switch to day map' : 'Switch to night map');
-      modeToggle.querySelector('span').textContent = isNight ? 'Day' : 'Night';
-      modeToggle.firstChild.textContent = isNight ? '☀ ' : '☾ ';
+      const label = modeToggle.querySelector('span');
+      const icon = modeToggle.querySelector('span');
+      if (label) label.textContent = isNight ? 'Day' : 'Night';
+      if (modeToggle.firstChild) modeToggle.firstChild.textContent = isNight ? '☀ ' : '☾ ';
       if (nightImage) nightImage.setAttribute('aria-hidden', String(!isNight));
     });
+
     resetView();
   }
 
-  function start() { addUpdatesPanel(); initMap(); }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  function start() {
+    addUpdatesPanel();
+    initMap();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
 })();
