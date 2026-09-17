@@ -1,1 +1,173 @@
-const container=document.getElementById('map-container');const image=document.getElementById('map-image');const nightImage=document.getElementById('map-image-night');const modeToggle=document.getElementById('mode-toggle');const mapImages=[image,nightImage];let scale=1,minScale=1,x=0,y=0,dragStart=null,isNight=false;let keys={};let frame=null,pendingDelta=0,pendingPoint=null;const MAX_SCALE=32,BUTTON_ZOOM_FACTOR=1.2,WHEEL_SENSITIVITY=.0012;const clamp=(v,min,max)=>Math.max(min,Math.min(v,max));function limit(){const w=container.clientWidth,h=container.clientHeight,iw=image.naturalWidth*scale,ih=image.naturalHeight*scale;x=clamp(x,Math.min(0,w-iw),Math.max(0,w-iw));y=clamp(y,Math.min(0,h-ih),Math.max(0,h-ih))}function render(){limit();const t=`translate3d(${x}px,${y}px,0) scale(${scale})`;mapImages.forEach(i=>i.style.transform=t)}function resetView(){if(!image.naturalWidth)return;const w=container.clientWidth,h=container.clientHeight;minScale=Math.min(w/image.naturalWidth,h/image.naturalHeight);scale=minScale;x=(w-image.naturalWidth*scale)/2;y=(h-image.naturalHeight*scale)/2;render()}function zoomAt(f,cx,cy){const next=clamp(scale*f,minScale,Math.max(minScale,MAX_SCALE));if(next===scale)return;const ratio=next/scale;x=cx-(cx-x)*ratio;y=cy-(cy-y)*ratio;scale=next;render()}function wheelZoom(){frame=null;if(!pendingDelta||!pendingPoint)return;const d=pendingDelta,p=pendingPoint;pendingDelta=0;pendingPoint=null;zoomAt(Math.exp(-d*WHEEL_SENSITIVITY),p.x,p.y)}container.addEventListener('wheel',e=>{e.preventDefault();const b=container.getBoundingClientRect();pendingDelta=clamp(pendingDelta+(e.deltaMode===1?e.deltaY*16:e.deltaY),-240,240);pendingPoint={x:e.clientX-b.left,y:e.clientY-b.top};if(frame===null)frame=requestAnimationFrame(wheelZoom)},{passive:false});container.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;container.setPointerCapture(e.pointerId);dragStart={pointerX:e.clientX,pointerY:e.clientY,x,y};container.classList.add('is-dragging')});container.addEventListener('pointermove',e=>{if(!dragStart)return;x=dragStart.x+e.clientX-dragStart.pointerX;y=dragStart.y+e.clientY-dragStart.pointerY;render()});function stop(){dragStart=null;container.classList.remove('is-dragging')}container.addEventListener('pointerup',stop);container.addEventListener('pointercancel',stop);document.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();keys[e.key]=true}});document.addEventListener('keyup',e=>{if(keys[e.key])keys[e.key]=false});setInterval(()=>{const speed=30;if(keys.ArrowUp)y+=speed;if(keys.ArrowDown)y-=speed;if(keys.ArrowLeft)x+=speed;if(keys.ArrowRight)x-=speed;if(Object.values(keys).some(Boolean))render()},16);image.addEventListener('load',resetView);window.addEventListener('resize',resetView);nightImage.addEventListener('error',()=>{nightImage.style.display='none';modeToggle.title='Add images/map-night.jpg to enable the night map'});document.getElementById('zoom-in').addEventListener('click',()=>zoomAt(BUTTON_ZOOM_FACTOR,container.clientWidth/2,container.clientHeight/2));document.getElementById('zoom-out').addEventListener('click',()=>zoomAt(1/BUTTON_ZOOM_FACTOR,container.clientWidth/2,container.clientHeight/2));document.getElementById('reset-view').addEventListener('click',resetView);modeToggle.addEventListener('click',()=>{isNight=!isNight;container.classList.toggle('is-night',isNight);modeToggle.setAttribute('aria-pressed',String(isNight));modeToggle.setAttribute('aria-label',isNight?'Switch to day map':'Switch to night map');modeToggle.querySelector('span').textContent=isNight?'Day':'Night';modeToggle.firstChild.textContent=isNight?'☀ ':'☾ ';nightImage.setAttribute('aria-hidden',String(!isNight))});
+(() => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .hero-grid{grid-template-columns:1.15fr .85fr!important}
+    .updates-panel{background:#ded5bd;border:2px solid var(--ink);box-shadow:8px 8px 0 #252525;padding:22px;transform:rotate(1deg);min-width:0}
+    .updates-panel h2{margin:4px 0 8px;font-size:clamp(1.8rem,3vw,2.8rem);line-height:.95;letter-spacing:-.05em}
+    .updates-intro{margin:0 0 16px;color:#504a3e;font-size:.9rem}
+    .updates-list{display:grid;gap:10px;max-height:330px;overflow:auto;padding-right:4px}
+    .update-item{background:#f7f2e5;border:1px solid var(--line);padding:12px}
+    .update-item strong{display:block;font-size:.9rem;line-height:1.2}
+    .update-meta{display:block;margin-top:6px;color:var(--muted);font:700 .65rem var(--pixel);text-transform:uppercase}
+    .updates-status{color:var(--muted);font:700 .68rem var(--pixel)}
+    .updates-refresh{margin-top:12px;padding:7px 10px;background:var(--blue);color:#fff;border:2px solid var(--ink);font:700 .7rem var(--pixel);cursor:pointer}
+    .updates-refresh:hover{background:var(--blue2)}
+    .join-box .btn:not(.primary){background:#f1ecdf!important;color:#111!important}
+    .classified{font-size:.58rem;line-height:1;white-space:nowrap}
+    @media(max-width:900px){.hero-grid{grid-template-columns:1fr!important}.updates-panel{transform:none}}
+  `;
+  document.head.appendChild(style);
+
+  function addUpdatesPanel() {
+    const heroGrid = document.querySelector('.hero-grid');
+    if (!heroGrid || document.querySelector('.updates-panel')) return;
+    const panel = document.createElement('aside');
+    panel.className = 'updates-panel';
+    panel.setAttribute('aria-labelledby', 'updates-title');
+    panel.innerHTML = `
+      <div class="eyebrow">Civic bulletin</div>
+      <h2 id="updates-title">Official updates.</h2>
+      <p class="updates-intro">The latest changes made to the IsraelCraft website, straight from the repository.</p>
+      <div class="updates-status" id="updates-status">Loading update log…</div>
+      <div class="updates-list" id="updates-list"></div>
+      <button class="updates-refresh" id="updates-refresh" type="button">REFRESH UPDATE LOG</button>
+    `;
+    heroGrid.appendChild(panel);
+
+    const list = panel.querySelector('#updates-list');
+    const status = panel.querySelector('#updates-status');
+    const refresh = panel.querySelector('#updates-refresh');
+    const endpoint = 'https://api.github.com/repos/glennfb83/IsraelCraft/commits?per_page=8';
+
+    async function loadUpdates() {
+      status.textContent = 'Loading update log…';
+      try {
+        const response = await fetch(endpoint, { headers: { Accept: 'application/vnd.github+json' } });
+        if (!response.ok) throw new Error('GitHub API returned ' + response.status);
+        const commits = await response.json();
+        list.innerHTML = commits.map(commit => {
+          const message = commit.commit.message.split('\n')[0];
+          const author = commit.author?.login || commit.commit.author?.name || 'Unknown editor';
+          const date = new Date(commit.commit.author?.date || commit.commit.committer?.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+          return `<article class="update-item"><strong>${escapeHtml(message)}</strong><span class="update-meta">${escapeHtml(author)} • ${date}</span></article>`;
+        }).join('');
+        status.textContent = `${commits.length} latest website updates`;
+      } catch (error) {
+        status.textContent = 'Update log temporarily unavailable.';
+        list.innerHTML = '<article class="update-item"><strong>Check the repository history for the latest changes.</strong><span class="update-meta">GitHub connection unavailable</span></article>';
+      }
+    }
+
+    refresh.addEventListener('click', loadUpdates);
+    loadUpdates();
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character]));
+  }
+
+  function initMap() {
+    const container = document.getElementById('map-container');
+    const image = document.getElementById('map-image');
+    const nightImage = document.getElementById('map-image-night');
+    const modeToggle = document.getElementById('mode-toggle');
+    if (!container || !image || !modeToggle) return;
+
+    const mapImages = [image, nightImage].filter(Boolean);
+    let scale = 1, minScale = 1, x = 0, y = 0, dragStart = null, isNight = false;
+    let keys = {}, zoomFrame = null, pendingDelta = 0, pendingPoint = null;
+    const MAX_SCALE = 32, BUTTON_ZOOM_FACTOR = 1.2, WHEEL_SENSITIVITY = 0.0012;
+    const clamp = (value, min, max) => Math.max(min, Math.min(value, max));
+
+    function limitPosition() {
+      const width = container.clientWidth, height = container.clientHeight;
+      const imageWidth = image.naturalWidth * scale, imageHeight = image.naturalHeight * scale;
+      x = clamp(x, Math.min(0, width - imageWidth), Math.max(0, width - imageWidth));
+      y = clamp(y, Math.min(0, height - imageHeight), Math.max(0, height - imageHeight));
+    }
+    function render() {
+      limitPosition();
+      const transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+      mapImages.forEach(mapImage => { mapImage.style.transform = transform; });
+    }
+    function resetView() {
+      if (!image.naturalWidth || !image.naturalHeight) return;
+      const width = container.clientWidth, height = container.clientHeight;
+      minScale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+      scale = minScale;
+      x = (width - image.naturalWidth * scale) / 2;
+      y = (height - image.naturalHeight * scale) / 2;
+      render();
+    }
+    function zoomAt(factor, centerX, centerY) {
+      const nextScale = clamp(scale * factor, minScale, Math.max(minScale, MAX_SCALE));
+      if (nextScale === scale) return;
+      const ratio = nextScale / scale;
+      x = centerX - (centerX - x) * ratio;
+      y = centerY - (centerY - y) * ratio;
+      scale = nextScale;
+      render();
+    }
+    function applyWheelZoom() {
+      zoomFrame = null;
+      if (!pendingDelta || !pendingPoint) return;
+      const delta = pendingDelta, point = pendingPoint;
+      pendingDelta = 0; pendingPoint = null;
+      zoomAt(Math.exp(-delta * WHEEL_SENSITIVITY), point.x, point.y);
+    }
+
+    container.addEventListener('wheel', event => {
+      event.preventDefault();
+      const bounds = container.getBoundingClientRect();
+      pendingDelta = clamp(pendingDelta + (event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY), -240, 240);
+      pendingPoint = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
+      if (zoomFrame === null) zoomFrame = requestAnimationFrame(applyWheelZoom);
+    }, { passive:false });
+    container.addEventListener('pointerdown', event => {
+      if (event.target.closest('button')) return;
+      container.setPointerCapture(event.pointerId);
+      dragStart = { pointerX:event.clientX, pointerY:event.clientY, x, y };
+      container.classList.add('is-dragging');
+    });
+    container.addEventListener('pointermove', event => {
+      if (!dragStart) return;
+      x = dragStart.x + event.clientX - dragStart.pointerX;
+      y = dragStart.y + event.clientY - dragStart.pointerY;
+      render();
+    });
+    const stopDragging = () => { dragStart = null; container.classList.remove('is-dragging'); };
+    container.addEventListener('pointerup', stopDragging);
+    container.addEventListener('pointercancel', stopDragging);
+    document.addEventListener('keydown', event => {
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); keys[event.key] = true; }
+    });
+    document.addEventListener('keyup', event => { if (keys[event.key]) keys[event.key] = false; });
+    setInterval(() => {
+      const speed = 30;
+      if (keys.ArrowUp) y += speed;
+      if (keys.ArrowDown) y -= speed;
+      if (keys.ArrowLeft) x += speed;
+      if (keys.ArrowRight) x -= speed;
+      if (Object.values(keys).some(Boolean)) render();
+    }, 16);
+    image.addEventListener('load', resetView);
+    window.addEventListener('resize', resetView);
+    if (nightImage) nightImage.addEventListener('error', () => { nightImage.style.display = 'none'; modeToggle.disabled = true; modeToggle.title = 'Night map unavailable'; });
+    document.getElementById('zoom-in')?.addEventListener('click', () => zoomAt(BUTTON_ZOOM_FACTOR, container.clientWidth / 2, container.clientHeight / 2));
+    document.getElementById('zoom-out')?.addEventListener('click', () => zoomAt(1 / BUTTON_ZOOM_FACTOR, container.clientWidth / 2, container.clientHeight / 2));
+    document.getElementById('reset-view')?.addEventListener('click', resetView);
+    modeToggle.addEventListener('click', () => {
+      isNight = !isNight;
+      container.classList.toggle('is-night', isNight);
+      modeToggle.setAttribute('aria-pressed', String(isNight));
+      modeToggle.setAttribute('aria-label', isNight ? 'Switch to day map' : 'Switch to night map');
+      modeToggle.querySelector('span').textContent = isNight ? 'Day' : 'Night';
+      modeToggle.firstChild.textContent = isNight ? '☀ ' : '☾ ';
+      if (nightImage) nightImage.setAttribute('aria-hidden', String(!isNight));
+    });
+    resetView();
+  }
+
+  function start() { addUpdatesPanel(); initMap(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
