@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IsraelCraft — World Map</title>
+  <meta name="description" content="Explore the IsraelCraft Minecraft world map.">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="map.css">
+</head>
+<body>
+  <div class="topbar"><div class="wrap"><span><i class="status-dot"></i> ISRAELCRAFT NETWORK // WHITELIST ACTIVE</span><span>JAVA + BEDROCK • VANILLA SURVIVAL</span></div></div>
+  <header><nav class="wrap navigation" aria-label="Main navigation">
+    <a class="brand" href="index.html"><span class="brand-mark">IC</span><span><strong>ISRAELCRAFT</strong><small>community civilization portal</small></span></a>
+    <div class="navlinks"><a href="index.html">Home</a><a href="#map">Map</a><a href="index.html#history">History</a><a href="index.html#people">Citizens</a><a href="index.html#join">Join</a><a href="https://discord.gg/fUkshKDKEz" target="_blank" rel="noopener">Discord ↗</a></div>
+  </nav></header>
+  <main class="wrap page-content" id="map">
+    <section class="intro"><div class="eyebrow">World archive</div><h1>IsraelCraft<br><span>world map viewer.</span></h1><p>Explore the server map, inspect the details, and find your way around the civilization.</p></section>
+    <section class="map-card" aria-labelledby="map-title">
+      <div class="map-card-header"><div><div class="eyebrow light">IsraelCraft cartography division</div><h2 id="map-title">Server map overview</h2></div><div class="map-controls" aria-label="Map controls"><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="zoom-out" type="button" aria-label="Zoom out">−</button><button id="reset-view" type="button" aria-label="Reset view">⟳</button><button id="mode-toggle" class="mode-toggle" type="button" aria-pressed="false" aria-label="Switch to night map">☾ <span>Night</span></button></div></div>
+      <div id="map-container" aria-label="Zoomable IsraelCraft world map"><img id="map-image" class="map-image" src="images/map.jpg" alt="IsraelCraft world map, daytime"><img id="map-image-night" class="map-image map-image-night" src="images/map-night.jpg" alt="IsraelCraft world map, nighttime" aria-hidden="true"></div>
+      <p class="map-help">Scroll to zoom • drag to pan • arrow keys to move • use the controls to reset</p>
+    </section>
+  </main>
+  <footer class="wrap footer"><strong>ISRAELCRAFT</strong><span>IsraelCraftMPG.exaroton.me</span><span>OFFICIAL-ISH • Not affiliated with Mojang or Microsoft.</span></footer>
+  <script src="map.js"></script>
+</body>
+</html>
