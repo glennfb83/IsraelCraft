@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IsraelCraft — World Map</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <meta name="description" content="Explore the IsraelCraft world map, a zoomable archive of the server's civilization and infrastructure." />
+  <link rel="stylesheet" href="map.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <div><span class="blink"></span> ISRAELCRAFT NETWORK // WHITELIST ACTIVE</div>
+      <div>JAVA + BEDROCK • VANILLA SURVIVAL • VERSION 26.2</div>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap">
+      <nav aria-label="Main navigation">
+        <a href="index.html#home" class="brand">
+          <span class="brand-mark">IC</span>
+          <span><strong>ISRAELCRAFT</strong><small>community civilization portal</small></span>
+        </a>
+        <div class="navlinks">
+          <a href="index.html#history">History</a>
+          <a href="index.html#people">Citizens</a>
+          <a href="index.html#government">Government</a>
+          <a href="index.html#games">Games</a>
+          <a href="index.html#builds">World</a>
+          <a href="map.html" class="active" aria-current="page">Map</a>
+          <a href="index.html#join">Join</a>
+        </div>
+        <a class="btn primary" href="https://discord.gg/fUkshKDKEz" target="_blank" rel="noopener">COMMUNITY DISCORD ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="map-page">
+    <section>
+      <div class="wrap">
+        <div class="section-head map-head">
+          <div>
+            <div class="eyebrow">Cartography division</div>
+            <h1><span>World archive</span>IsraelCraft</h1>
+          </div>
+          <p>Explore the server map, inspect the details, and find your way around the civilization.</p>
+        </div>
+
+        <div class="map-card" aria-labelledby="map-title">
+          <div class="map-card-header">
+            <div>
+              <div class="eyebrow light">Official-ish geographic record</div>
+              <h2 id="map-title">Server map overview</h2>
+            </div>
+            <div class="map-controls" aria-label="Map controls">
+              <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+              <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
+              <button id="reset-view" type="button" aria-label="Reset view">⟳</button>
+              <button id="mode-toggle" class="mode-toggle" type="button" aria-pressed="false" aria-label="Switch to night map">☾ <span>Night</span></button>
+            </div>
+          </div>
+
+          <div id="map-container" aria-label="Zoomable IsraelCraft world map">
+            <img id="map-image" src="images/map.jpg" alt="IsraelCraft world map, daytime" />
+          </div>
+
+          <p class="map-help">Scroll to zoom • drag to pan • use arrow keys to move • use the controls to reset • night mode is a visual filter</p>
+        </div>
+
+        <div class="info-grid">
+          <article class="card">
+            <div class="eyebrow">Field notes</div>
+            <h2>A small server.<br>An unreasonable amount of lore.</h2>
+            <p>IsraelCraft has bases, roads, automated farms, a Nether highway, sporting institutions, political controversy, and exactly four people keeping all of it alive.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="eyebrow light">Navigation log</div>
+            <p class="terminal">MAP STATUS: ONLINE<br>WHITELIST: ACTIVE<br>LEIF INVENTORY: QUESTIONABLE<br>MAX CRIMINAL ALLEGATIONS: ALLEGEDLY</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>
+        <strong>ISRAELCRAFT</strong><br>
+        IsraelCraftMPG.exaroton.me
+      </div>
+      <div>
+        Founded by Big P, Glenn & Max.<br>
+        Later joined by Leif, Bedrock boy.
+      </div>
+      <div>
+        <span class="classified">OFFICIAL-ISH</span><br>
+        <span class="tiny">Not affiliated with Mojang or Microsoft.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="map.js"></script>
+</body>
+</html>
