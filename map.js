@@ -14,7 +14,17 @@
     .updates-refresh:hover{background:var(--blue2)}
     .join-box .btn:not(.primary){background:#f1ecdf!important;color:#111!important}
     .classified{font-size:.58rem;line-height:1;white-space:nowrap}
+    .citizen-metrics{scroll-margin-top:80px}
+    .citizen-metrics .stats-table{width:100%;border-collapse:collapse;background:var(--card);font:0.85rem var(--pixel)}
+    .citizen-metrics .stats-table th,.citizen-metrics .stats-table td{border:1px solid var(--line);padding:14px;text-align:center}
+    .citizen-metrics .stats-table th{background:#1b1b1b;color:#f4efdf;font-weight:900}
+    .citizen-metrics .stats-table td:first-child,.citizen-metrics .stats-table th:first-child{text-align:left}
+    .citizen-metrics .rank-1{color:#8b6b19;font-weight:900}
+    .citizen-metrics .rank-2{color:#686868;font-weight:800}
+    .citizen-metrics .rank-3{color:#8a5832;font-weight:800}
+    .citizen-metrics .rank-4{color:#5b5548;font-weight:800}
     @media(max-width:900px){.hero-grid{grid-template-columns:1fr!important}.updates-panel{transform:none}}
+    @media(max-width:620px){.citizen-metrics .stats-table{font-size:.72rem}.citizen-metrics .stats-table th,.citizen-metrics .stats-table td{padding:10px}}
   `;
   document.head.appendChild(style);
 
@@ -63,6 +73,30 @@
     loadUpdates();
   }
 
+  function addCitizenMetrics() {
+    const people = document.querySelector('#people');
+    if (!people || document.querySelector('#citizen-metrics')) return;
+    people.insertAdjacentHTML('afterend', `
+      <section id="citizen-metrics" class="citizen-metrics">
+        <div class="wrap">
+          <div class="section-head">
+            <div><div class="eyebrow">Civic analytics</div><h2>Citizen performance<br>metrics.</h2></div>
+            <p>Comparative statistics across all citizens, ranked by category. Rankings are unofficial and disputed by at least one party at any given time.</p>
+          </div>
+          <table class="stats-table">
+            <thead><tr><th>Metric</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Morality Level</strong></td><td class="rank-1">Leif</td><td class="rank-2">Glenn</td><td class="rank-3">Max</td><td class="rank-4">Pierson</td></tr>
+              <tr><td><strong>Wealth Level</strong></td><td class="rank-1">Pierson</td><td class="rank-2">Glenn</td><td class="rank-3">Max</td><td class="rank-4">Leif</td></tr>
+              <tr><td><strong>Land Size</strong></td><td class="rank-1">Max</td><td class="rank-2">Glenn</td><td class="rank-3">Pierson</td><td class="rank-4">Leif</td></tr>
+              <tr><td><strong>Development Level</strong></td><td class="rank-1">Pierson</td><td class="rank-2">Glenn</td><td class="rank-3">Max</td><td class="rank-4">Leif</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    `);
+  }
+
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[character]));
   }
@@ -74,7 +108,6 @@
     const modeToggle = document.getElementById('mode-toggle');
     if (!container || !image || !modeToggle) return;
 
-    // Touch support for mobile devices.
     container.style.touchAction = 'none';
     container.style.userSelect = 'none';
     container.style.webkitUserSelect = 'none';
@@ -142,10 +175,7 @@
       container.classList.add('is-dragging');
     }
 
-    container.addEventListener('pointerdown', event => {
-      startDrag(event);
-    });
-
+    container.addEventListener('pointerdown', event => { startDrag(event); });
     container.addEventListener('touchstart', event => {
       if (event.touches.length !== 1) return;
       const touch = event.touches[0];
@@ -160,7 +190,6 @@
       y = dragStart.y + event.clientY - dragStart.pointerY;
       render();
     });
-
     container.addEventListener('touchmove', event => {
       if (!dragStart || event.touches.length !== 1) return;
       const touch = event.touches[0];
@@ -170,27 +199,16 @@
       event.preventDefault();
     }, { passive: false });
 
-    const stopDragging = () => {
-      dragStart = null;
-      container.classList.remove('is-dragging');
-    };
-
+    const stopDragging = () => { dragStart = null; container.classList.remove('is-dragging'); };
     container.addEventListener('pointerup', stopDragging);
     container.addEventListener('pointercancel', stopDragging);
     container.addEventListener('touchend', stopDragging, { passive: false });
     container.addEventListener('touchcancel', stopDragging, { passive: false });
 
     document.addEventListener('keydown', event => {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-        event.preventDefault();
-        keys[event.key] = true;
-      }
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) { event.preventDefault(); keys[event.key] = true; }
     });
-
-    document.addEventListener('keyup', event => {
-      if (keys[event.key]) keys[event.key] = false;
-    });
-
+    document.addEventListener('keyup', event => { if (keys[event.key]) keys[event.key] = false; });
     setInterval(() => {
       const speed = 30;
       if (keys.ArrowUp) y += speed;
@@ -202,42 +220,32 @@
 
     image.addEventListener('load', resetView);
     window.addEventListener('resize', resetView);
-
-    if (nightImage) {
-      nightImage.addEventListener('error', () => {
-        nightImage.style.display = 'none';
-        modeToggle.disabled = true;
-        modeToggle.title = 'Night map unavailable';
-      });
-    }
+    if (nightImage) nightImage.addEventListener('error', () => {
+      nightImage.style.display = 'none'; modeToggle.disabled = true; modeToggle.title = 'Night map unavailable';
+    });
 
     document.getElementById('zoom-in')?.addEventListener('click', () => zoomAt(BUTTON_ZOOM_FACTOR, container.clientWidth / 2, container.clientHeight / 2));
     document.getElementById('zoom-out')?.addEventListener('click', () => zoomAt(1 / BUTTON_ZOOM_FACTOR, container.clientWidth / 2, container.clientHeight / 2));
     document.getElementById('reset-view')?.addEventListener('click', resetView);
-
     modeToggle.addEventListener('click', () => {
       isNight = !isNight;
       container.classList.toggle('is-night', isNight);
       modeToggle.setAttribute('aria-pressed', String(isNight));
       modeToggle.setAttribute('aria-label', isNight ? 'Switch to day map' : 'Switch to night map');
       const label = modeToggle.querySelector('span');
-      const icon = modeToggle.querySelector('span');
       if (label) label.textContent = isNight ? 'Day' : 'Night';
       if (modeToggle.firstChild) modeToggle.firstChild.textContent = isNight ? '☀ ' : '☾ ';
       if (nightImage) nightImage.setAttribute('aria-hidden', String(!isNight));
     });
-
     resetView();
   }
 
   function start() {
     addUpdatesPanel();
+    addCitizenMetrics();
     initMap();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
-    start();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 })();
