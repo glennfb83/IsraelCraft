@@ -86,7 +86,7 @@
           <table class="stats-table">
             <thead><tr><th>Metric</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th></tr></thead>
             <tbody>
-              <tr><td><strong>Morality Level</strong></td><td class="rank-1">Leif</td><td class="rank-2">Glenn</td><td class="rank-3">Max</td><td class="rank-4">Pierson</td></tr>
+              <tr><td><strong>Morality Level</strong></td><td class="rank-1">Leif</td><td class="rank-2">Glenn</td><td class="rank-3">Pierson</td><td class="rank-4">Max</td></tr>
               <tr><td><strong>Wealth Level</strong></td><td class="rank-1">Pierson</td><td class="rank-2">Glenn</td><td class="rank-3">Max</td><td class="rank-4">Leif</td></tr>
               <tr><td><strong>Land Size</strong></td><td class="rank-1">Max</td><td class="rank-2">Glenn</td><td class="rank-3">Pierson</td><td class="rank-4">Leif</td></tr>
               <tr><td><strong>Development Level</strong></td><td class="rank-1">Pierson</td><td class="rank-2">Glenn</td><td class="rank-3">Max</td><td class="rank-4">Leif</td></tr>
