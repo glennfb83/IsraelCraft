@@ -108,6 +108,9 @@
     const modeToggle = document.getElementById('mode-toggle');
     if (!container || !image || !modeToggle) return;
 
+    // Use the actual supplied filename on both the homepage and standalone viewer.
+    if (nightImage) nightImage.src = 'images/nightmap.jpg';
+
     container.style.touchAction = 'none';
     container.style.userSelect = 'none';
     container.style.webkitUserSelect = 'none';
