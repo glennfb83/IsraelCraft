@@ -23,6 +23,9 @@
     .citizen-metrics .rank-2{color:#686868;font-weight:800}
     .citizen-metrics .rank-3{color:#8a5832;font-weight:800}
     .citizen-metrics .rank-4{color:#5b5548;font-weight:800}
+    #map-container .map-image-night{opacity:0;pointer-events:none}
+    #map-container.is-night .map-image{opacity:0}
+    #map-container.is-night .map-image-night{opacity:1}
     @media(max-width:900px){.hero-grid{grid-template-columns:1fr!important}.updates-panel{transform:none}}
     @media(max-width:620px){.citizen-metrics .stats-table{font-size:.72rem}.citizen-metrics .stats-table th,.citizen-metrics .stats-table td{padding:10px}}
   `;
@@ -108,8 +111,9 @@
     const modeToggle = document.getElementById('mode-toggle');
     if (!container || !image || !modeToggle) return;
 
-    // Use the actual supplied filename on both the homepage and standalone viewer.
-    if (nightImage) nightImage.src = 'images/nightmap.jpg';
+    // Set both image URLs explicitly so the standalone viewer and homepage use the PNG assets.
+    image.src = 'images/map.png';
+    if (nightImage) nightImage.src = 'images/nightmap.png';
 
     container.style.touchAction = 'none';
     container.style.userSelect = 'none';
