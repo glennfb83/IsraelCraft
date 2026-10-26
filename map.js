@@ -17,7 +17,7 @@
     .citizen-metrics .stats-table th,.citizen-metrics .stats-table td{border:1px solid var(--line);padding:14px;text-align:center}
     .citizen-metrics .stats-table th{background:#1b1b1b;color:#f4efdf;font-weight:900}
     .citizen-metrics .stats-table td:first-child,.citizen-metrics .stats-table th:first-child{text-align:left}
-    .citizen-metrics .rank-1{color:#8b6b19;font-weight:900}.citizen-metrics .rank-2{color:#686868;font-weight:800}.citizen-metrics .rank-3{color:#8a5832;font-weight:800}.citizen-metrics .rank-4{color:#5b5548;font-weight:800}
+    .citizen-metrics .rank-1{color:#8b6b19;font-weight:900}.citizen-metrics .rank-2{color:#686868;font-weight:800}.citizen-metrics .rank-3{color:#8a5832;font-weight:800}.citizen-metrics .rank-4{color:#4c4b46;font-weight:700}
     .map-card{position:relative;overflow:hidden}
     #map-container{position:relative;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
     #map-container.is-dragging{cursor:grabbing}
@@ -25,16 +25,16 @@
     #map-container .map-image-night{opacity:0;pointer-events:none;z-index:1}
     #map-container.is-night .map-image{opacity:0}
     #map-container.is-night .map-image-night{opacity:1}
-    .waypoint-layer{position:absolute;inset:0;z-index:5;pointer-events:none;transform-origin:0 0}.waypoint-marker{position:absolute;width:34px;height:34px;border:3px solid #fff;border-radius:50%;background:rgba(29,78,137,.9);box-shadow:0 0 0 2px rgba(0,0,0,.2)}
+    .waypoint-layer{position:absolute;inset:0;z-index:5;pointer-events:none;transform-origin:0 0}.waypoint-marker{position:absolute;width:34px;height:34px;border:3px solid #fff;border-radius:50%;background:rgba(29,78,137,.86);box-shadow:0 0 0 2px rgba(0,0,0,.25)}
     .waypoint-marker:hover{filter:brightness(1.08)}
-    .waypoint-modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#16161699;padding:20px}.waypoint-dialog{width:min(390px,100%);background:var(--paper);border:2px solid var(--ink);padding:22px;box-shadow:8px 8px 0 #202020}.waypoint-dialog form{display:grid;gap:12px}.waypoint-dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}.waypoint-hidden{display:none}.waypoint-info-modal{position:fixed;right:18px;bottom:18px;max-width:240px;z-index:101;background:#f5efe3;border:2px solid var(--ink);box-shadow:7px 7px 0 #202020;padding:12px}
+    .waypoint-modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#16161699;padding:20px}.waypoint-dialog{width:min(390px,100%);background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 #000;padding:22px;position:relative}.waypoint-close{position:absolute;top:12px;right:12px;background:transparent;border:0;font-size:1.5rem;cursor:pointer;color:var(--ink)}.waypoint-dialog h3{margin:0 0 10px;font-size:1.6rem}.waypoint-dialog p{margin:0 0 16px;line-height:1.5}.waypoint-dialog .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.waypoint-tag{font:700 .63rem var(--pixel);text-transform:uppercase;background:#e7e0cf;border:1px solid var(--line);padding:6px 8px}.map-controls{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;flex-wrap:wrap}.zoom-btn,.mode-toggle{border:2px solid var(--ink);background:#f7f2e5;color:var(--ink);padding:7px 12px;font:700 .7rem var(--pixel);cursor:pointer}.zoom-btn:hover,.mode-toggle:hover{background:#efe7d2}.mode-toggle.is-night{background:#1d4e89;color:#fff}.hidden{display:none!important}
     @media(max-width:900px){.hero-grid{grid-template-columns:1fr!important}.updates-panel{transform:none}}@media(max-width:620px){.citizen-metrics .stats-table{font-size:.72rem}.citizen-metrics .stats-table th,.citizen-metrics .stats-table td{padding:10px 8px}}
   `;
   document.head.appendChild(style);
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, character => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'
     }[character]));
   }
 
@@ -111,41 +111,36 @@
           <table class="stats-table">
             <thead>
               <tr>
-                <th>Citizen</th>
                 <th>Morality</th>
                 <th>Wealth</th>
                 <th>Development</th>
-                <th>Influence</th>
+                <th>Land Size</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="rank-1">Glenn</td>
-                <td class="rank-1">98</td>
-                <td class="rank-1">90</td>
-                <td class="rank-1">94</td>
-                <td class="rank-1">96</td>
+                <td class="rank-1">Glenn 1st</td>
+                <td class="rank-1">Pierson 1st</td>
+                <td class="rank-1">Pierson 1st</td>
+                <td class="rank-1">Pierson 1st</td>
               </tr>
               <tr>
-                <td class="rank-2">Pierson</td>
-                <td class="rank-2">94</td>
-                <td class="rank-2">88</td>
-                <td class="rank-2">90</td>
-                <td class="rank-2">89</td>
+                <td class="rank-2">Pierson 2nd</td>
+                <td class="rank-2">Max 2nd</td>
+                <td class="rank-2">Glenn 2nd</td>
+                <td class="rank-2">Max 2nd</td>
               </tr>
               <tr>
-                <td class="rank-3">Max</td>
-                <td class="rank-3">91</td>
-                <td class="rank-3">82</td>
-                <td class="rank-3">86</td>
-                <td class="rank-3">84</td>
+                <td class="rank-3">Max 3rd</td>
+                <td class="rank-3">Glenn 3rd</td>
+                <td class="rank-3">Max 3rd</td>
+                <td class="rank-3">Glenn 3rd</td>
               </tr>
               <tr>
-                <td class="rank-4">Leif</td>
-                <td class="rank-4">88</td>
-                <td class="rank-4">76</td>
-                <td class="rank-4">78</td>
-                <td class="rank-4">80</td>
+                <td class="rank-4">Leif 4th</td>
+                <td class="rank-4">Leif 4th</td>
+                <td class="rank-4">Leif 4th</td>
+                <td class="rank-4">Leif 4th</td>
               </tr>
             </tbody>
           </table>
