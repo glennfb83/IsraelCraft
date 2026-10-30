@@ -17,7 +17,7 @@
     .citizen-metrics .stats-table th,.citizen-metrics .stats-table td{border:1px solid var(--line);padding:14px;text-align:center}
     .citizen-metrics .stats-table th{background:#1b1b1b;color:#f4efdf;font-weight:900}
     .citizen-metrics .stats-table td:first-child,.citizen-metrics .stats-table th:first-child{text-align:left}
-    .citizen-metrics .rank-1{color:#8b6b19;font-weight:900}.citizen-metrics .rank-2{color:#686868;font-weight:800}.citizen-metrics .rank-3{color:#8a5832;font-weight:800}.citizen-metrics .rank-4{color:#4c4b46;font-weight:700}
+    .citizen-metrics .rank-1{color:#8b6b19;font-weight:900}.citizen-metrics .rank-2{color:#686868;font-weight:800}.citizen-metrics .rank-3{color:#8a5832;font-weight:800}.citizen-metrics .rank-4{color:#5f694d;font-weight:700}
     .map-card{position:relative;overflow:hidden}
     #map-container{position:relative;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
     #map-container.is-dragging{cursor:grabbing}
@@ -25,9 +25,8 @@
     #map-container .map-image-night{opacity:0;pointer-events:none;z-index:1}
     #map-container.is-night .map-image{opacity:0}
     #map-container.is-night .map-image-night{opacity:1}
-    .waypoint-layer{position:absolute;inset:0;z-index:5;pointer-events:none;transform-origin:0 0}.waypoint-marker{position:absolute;width:34px;height:34px;border:3px solid #fff;border-radius:50%;background:rgba(29,78,137,.86);box-shadow:0 0 0 2px rgba(0,0,0,.25)}
-    .waypoint-marker:hover{filter:brightness(1.08)}
-    .waypoint-modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#16161699;padding:20px}.waypoint-dialog{width:min(390px,100%);background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 #000;padding:22px;position:relative}.waypoint-close{position:absolute;top:12px;right:12px;background:transparent;border:0;font-size:1.5rem;cursor:pointer;color:var(--ink)}.waypoint-dialog h3{margin:0 0 10px;font-size:1.6rem}.waypoint-dialog p{margin:0 0 16px;line-height:1.5}.waypoint-dialog .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.waypoint-tag{font:700 .63rem var(--pixel);text-transform:uppercase;background:#e7e0cf;border:1px solid var(--line);padding:6px 8px}.map-controls{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;flex-wrap:wrap}.zoom-btn,.mode-toggle{border:2px solid var(--ink);background:#f7f2e5;color:var(--ink);padding:7px 12px;font:700 .7rem var(--pixel);cursor:pointer}.zoom-btn:hover,.mode-toggle:hover{background:#efe7d2}.mode-toggle.is-night{background:#1d4e89;color:#fff}.hidden{display:none!important}
+    .waypoint-layer{position:absolute;inset:0;z-index:5;pointer-events:none;transform-origin:0 0}.waypoint-marker{position:absolute;width:34px;height:34px;border:3px solid #fff;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font:900 .72rem var(--pixel);box-shadow:0 0 0 2px rgba(0,0,0,.35);transform:translate(-50%,-100%) rotate(-45deg);cursor:pointer;transition:filter .12s ease}.waypoint-marker:hover{filter:brightness(1.08)}
+    .waypoint-modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#16161699;padding:20px}.waypoint-dialog{width:min(390px,100%);background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 #161616;padding:20px}.waypoint-dialog h3{margin:0 0 12px;font-size:1.25rem}.waypoint-dialog textarea{width:100%;height:110px;resize:vertical;padding:10px;border:2px solid var(--line);background:#fff8ea}.waypoint-dialog .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}.waypoint-dialog button{padding:9px 12px;border:2px solid var(--ink);font:700 .7rem var(--pixel);cursor:pointer}.waypoint-dialog .primary{background:var(--blue);color:#fff}.waypoint-dialog .secondary{background:#efe8d6}
     @media(max-width:900px){.hero-grid{grid-template-columns:1fr!important}.updates-panel{transform:none}}@media(max-width:620px){.citizen-metrics .stats-table{font-size:.72rem}.citizen-metrics .stats-table th,.citizen-metrics .stats-table td{padding:10px 8px}}
   `;
   document.head.appendChild(style);
@@ -180,7 +179,7 @@
     const mapImages = [image, nightImage].filter(Boolean);
     let scale = 1, minScale = 1, x = 0, y = 0, dragStart = null, isNight = false;
     let keys = {}, zoomFrame = null, pendingDelta = 0, pendingPoint = null;
-    const MAX_SCALE = 32, BUTTON_ZOOM_FACTOR = 1.2, WHEEL_SENSITIVITY = 0.0012;
+    const MAX_SCALE = 128, BUTTON_ZOOM_FACTOR = 1.2, WHEEL_SENSITIVITY = 0.0012;
     const clamp = (value, min, max) => Math.max(min, Math.min(value, max));
 
     function limitPosition() {
@@ -206,14 +205,11 @@
       const height = container.clientHeight;
       const imageW = image.naturalWidth;
       const imageH = image.naturalHeight;
-      minScale = Math.min(width / imageW, height / imageH);
-      const island = { x0: 0.469, y0: 0.445, x1: 0.738, y1: 0.985 };
-      const margin = 1.12;
-      const islandW = (island.x1 - island.x0) * imageW * margin;
-      const islandH = (island.y1 - island.y0) * imageH * margin;
-      scale = clamp(Math.min(width / islandW, height / islandH), minScale, MAX_SCALE);
-      x = width / 2 - ((island.x0 + island.x1) / 2) * imageW * scale;
-      y = height / 2 - ((island.y0 + island.y1) / 2) * imageH * scale;
+      const fitScale = Math.min(width / imageW, height / imageH);
+      minScale = Math.max(fitScale, 0.35);
+      scale = clamp(Math.max(fitScale * 2.1, 1.35), minScale, MAX_SCALE);
+      x = width / 2 - (imageW * scale) / 2;
+      y = height / 2 - (imageH * scale) / 2;
       render();
     }
 
